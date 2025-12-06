@@ -79,16 +79,6 @@ python3 pac_fault_injector.py --mode runtime --trials 100
 python3 pac_fault_injector.py --mode recovery --trials 50
 ```
 
-Results accumulate in `faultlab/results/` as JSON files. Each trial records the achieved tier, boot time, degradation timing, recovery metrics, and final system state.
-
-Analyze experimental data:
-
-```bash
-python3 analyze_results.py
-```
-
-This summarizes success rates, mean time to detect faults (MTTD), mean time to recover (MTTR), and system availability percentages across fault types.
-
 ## Repository Structure
 
 Core components live in dedicated directories. The `journal/` directory contains the atomic boot journal implementation with double-buffered writes. Health check code resides in `health_check/` and evaluates multiple system dimensions. Policy logic for tier transitions exists in `policy/`. The remote verifier implementation with EAT token processing occupies `verifier/`.
