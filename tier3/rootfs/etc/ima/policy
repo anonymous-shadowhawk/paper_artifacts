@@ -1,0 +1,4 @@
+# IMA Policy for PAC Tier 3
+# Measure and appraise executables
+measure func=BPRM_CHECK
+appraise func=BPRM_CHECK
