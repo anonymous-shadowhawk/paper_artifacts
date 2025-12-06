@@ -1,0 +1,108 @@
+#
+# PAC Policy Engine Configuration
+#
+# This file defines the policy rules for tier promotion decisions.
+# Copy to /etc/pac/policy.conf or set POLICY_CONFIG environment variable.
+#
+
+#===============================================================================
+# Tier-2 Promotion Requirements
+#===============================================================================
+
+# Minimum health score required for Tier-2 promotion (out of 6)
+# Default: 4 (66% of checks must pass)
+POLICY_T2_MIN_HEALTH_SCORE=4
+
+# Require watchdog device for Tier-2?
+# 0 = No (optional), 1 = Yes (required)
+# Default: 0 (many systems don't have watchdog on dev platforms)
+POLICY_T2_REQUIRE_WDT=0
+
+# Require ECC memory checks to pass for Tier-2?
+# Default: 1 (memory integrity is important)
+POLICY_T2_REQUIRE_ECC=1
+
+# Require storage integrity for Tier-2?
+# Default: 1 (critical for system operation)
+POLICY_T2_REQUIRE_STORAGE=1
+
+# Require memory availability for Tier-2?
+# Default: 1 (need sufficient RAM)
+POLICY_T2_REQUIRE_MEMORY=1
+
+# Require network connectivity for Tier-2?
+# Default: 0 (Tier-2 can operate without network)
+POLICY_T2_REQUIRE_NETWORK=0
+
+#===============================================================================
+# Tier-3 Promotion Requirements
+#===============================================================================
+
+# Minimum health score required for Tier-3 promotion (out of 6)
+# Default: 5 (83% of checks must pass)
+POLICY_T3_MIN_HEALTH_SCORE=5
+
+# Require network connectivity for Tier-3?
+# Default: 1 (Tier-3 typically needs network for full features/attestation)
+POLICY_T3_REQUIRE_NETWORK=1
+
+#===============================================================================
+# Emergency Mode Policy
+#===============================================================================
+
+# Enter emergency mode when tier attempts are exhausted?
+# 0 = No (just stay in Tier-1), 1 = Yes (emergency + quarantine)
+# Default: 1 (safer to quarantine and wait for admin)
+POLICY_EMERGENCY_ON_EXHAUSTED=1
+
+#===============================================================================
+# Brownout Recovery
+#===============================================================================
+
+# Number of boots to wait after brownout before attempting promotion
+# Default: 2 (give system time to stabilize)
+POLICY_BROWNOUT_WAIT_BOOTS=2
+
+#===============================================================================
+# Custom Policies (Examples)
+#===============================================================================
+
+# Strict policy: Require all checks for Tier-2
+# POLICY_T2_MIN_HEALTH_SCORE=6
+# POLICY_T2_REQUIRE_WDT=1
+# POLICY_T2_REQUIRE_NETWORK=1
+
+# Lenient policy: Allow promotion with minimal checks
+# POLICY_T2_MIN_HEALTH_SCORE=3
+# POLICY_T2_REQUIRE_ECC=0
+# POLICY_T2_REQUIRE_STORAGE=0
+
+# Network-dependent policy: Gate all promotions on network
+# POLICY_T2_REQUIRE_NETWORK=1
+# POLICY_T3_REQUIRE_NETWORK=1
+
+# Conservative recovery: Wait longer after brownout
+# POLICY_BROWNOUT_WAIT_BOOTS=5
+
+#===============================================================================
+# Notes
+#===============================================================================
+
+# - Lower health scores = more lenient (easier to promote)
+# - Higher health scores = stricter (harder to promote, more stable)
+# - Network-gated policies enable remote attestation requirements
+# - Watchdog requirement depends on hardware availability
+# - ECC requirement may not be available on all platforms
+
+# For production embedded systems, recommend:
+# POLICY_T2_MIN_HEALTH_SCORE=5
+# POLICY_T2_REQUIRE_ECC=1
+# POLICY_T2_REQUIRE_STORAGE=1
+# POLICY_T2_REQUIRE_MEMORY=1
+# POLICY_T3_REQUIRE_NETWORK=1
+
+# For development/testing, recommend:
+# POLICY_T2_MIN_HEALTH_SCORE=4
+# POLICY_T2_REQUIRE_WDT=0
+# POLICY_T2_REQUIRE_NETWORK=0
+
