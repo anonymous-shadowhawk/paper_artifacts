@@ -1,6 +1,12 @@
 # Progressive Attestation Chain (PAC) Boot System
 
 [![Build](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg)](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml)
+[![Platform](https://img.shields.io/badge/platform-ARM64%20%7C%20QEMU-blue.svg)](https://www.qemu.org/)
+[![Language](https://img.shields.io/badge/language-C%20%7C%20Python%20%7C%20Shell-green.svg)](https://github.com/anonymous-shadowhawk/paper_artifacts)
+[![Ubuntu](https://img.shields.io/badge/ubuntu-22.04%20LTS-orange.svg)](https://ubuntu.com/)
+[![TPM](https://img.shields.io/badge/TPM-2.0-red.svg)](https://trustedcomputinggroup.org/)
+
+---
 
 This repository contains the implementation and experimental framework for a fault-tolerant secure boot system that uses progressive attestation to achieve resilience under adverse conditions.
 
