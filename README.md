@@ -12,32 +12,32 @@
 
 <p align="center">
   <a href="https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml">
-    <img src="https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg?style=flat-square" alt="Build Status" height="30"/>
+    <img src="https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg" alt="Build Status" height="30"/>
   </a>
   &nbsp;&nbsp;
   <a href="LICENSE">
-    <img src="https://img.shields.io/badge/LICENSE-MIT-00bcd4.svg?style=flat-square" alt="License" height="30"/>
+    <img src="https://img.shields.io/badge/LICENSE-MIT-00bcd4.svg?style=flat" alt="License" height="30"/>
   </a>
   &nbsp;&nbsp;
   <a href="https://www.qemu.org/">
-    <img src="https://img.shields.io/badge/PLATFORM-ARM64%20%7C%20QEMU-1e88e5.svg?style=flat-square&logo=qemu&logoColor=white" alt="Platform" height="30"/>
+    <img src="https://img.shields.io/badge/PLATFORM-ARM64%20%7C%20QEMU-1e88e5.svg?style=flat&logo=qemu&logoColor=white" alt="Platform" height="30"/>
   </a>
   &nbsp;&nbsp;
   <a href="https://trustedcomputinggroup.org/">
-    <img src="https://img.shields.io/badge/TPM-2.0-e53935.svg?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0wLTE0Yy0zLjMxIDAtNiAyLjY5LTYgNnMyLjY5IDYgNiA2IDYtMi42OSA2LTYtMi42OS02LTYtNnoiLz48L3N2Zz4=" alt="TPM" height="30"/>
+    <img src="https://img.shields.io/badge/TPM-2.0-e53935.svg?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0wLTE0Yy0zLjMxIDAtNiAyLjY5LTYgNnMyLjY5IDYgNiA2IDYtMi42OSA2LTYtMi42OS02LTYtNnoiLz48L3N2Zz4=" alt="TPM" height="30"/>
   </a>
 </p>
 
 <p align="center">
   <a href="https://github.com/anonymous-shadowhawk/paper_artifacts">
-    <img src="https://img.shields.io/badge/LANGUAGE-C%20%7C%20Python%20%7C%20Shell-43a047.svg?style=flat-square&logo=gnu&logoColor=white" alt="Languages" height="30"/>
+    <img src="https://img.shields.io/badge/LANGUAGE-C%20%7C%20Python%20%7C%20Shell-43a047.svg?style=flat&logo=gnu&logoColor=white" alt="Languages" height="30"/>
   </a>
   &nbsp;&nbsp;
   <a href="https://ubuntu.com/">
-    <img src="https://img.shields.io/badge/UBUNTU-22.04%20LTS-f57c00.svg?style=flat-square&logo=ubuntu&logoColor=white" alt="Ubuntu" height="30"/>
+    <img src="https://img.shields.io/badge/UBUNTU-22.04%20LTS-f57c00.svg?style=flat&logo=ubuntu&logoColor=white" alt="Ubuntu" height="30"/>
   </a>
   &nbsp;&nbsp;
-  <img src="https://img.shields.io/badge/ARCHITECTURE-aarch64-7b1fa2.svg?style=flat-square&logo=arm&logoColor=white" alt="Architecture" height="30"/>
+  <img src="https://img.shields.io/badge/ARCHITECTURE-aarch64-7b1fa2.svg?style=flat&logo=arm&logoColor=white" alt="Architecture" height="30"/>
 </p>
 
 <br>
