@@ -1,0 +1,209 @@
+#!/bin/sh
+
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev 2>/dev/null || true
+mount -t tmpfs none /tmp
+
+clear
+echo "═══════════════════════════════════════════════════════════════════"
+echo "    PAC Boot - Progressive Attestation Chain"
+echo "              Fault-Tolerant Secure Boot"
+echo "═══════════════════════════════════════════════════════════════════"
+echo ""
+
+JOURNAL="/var/pac/journal.dat"
+HEALTH_LOG="/tmp/health_status.json"
+POLICY_SCRIPT="/usr/lib/pac/policy_engine.sh"
+HEALTH_SCRIPT="/usr/lib/pac/health_check.sh"
+ATTEST_SCRIPT="/usr/lib/pac/attest_agent.sh"
+NETWORK_SCRIPT="/usr/lib/pac/setup_network.sh"
+
+mkdir -p /var/pac /tmp
+
+if [ ! -f "$JOURNAL" ]; then
+    echo "-> Initializing boot journal..."
+    /bin/journal_tool init "$JOURNAL" 2>/dev/null || echo "  (using defaults)"
+fi
+
+echo "-> Recording boot attempt..."
+/bin/journal_tool inc-boot "$JOURNAL" 2>/dev/null || true
+
+echo "-> Reading boot journal..."
+CURRENT_TIER=$(/bin/journal_tool read "$JOURNAL" 2>/dev/null | grep "Tier:" | awk '{print $2}')
+CURRENT_TIER=${CURRENT_TIER:-1}
+echo "Current Tier: $CURRENT_TIER"
+echo ""
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "HEALTH CHECK"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ -f "$HEALTH_SCRIPT" ]; then
+    sh "$HEALTH_SCRIPT" || echo "  - Health check completed with warnings"
+else
+    echo "  - Health check script not found"
+fi
+echo ""
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "POLICY ENGINE - PROGRESSIVE TIER DECISION"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ "${PAC_DEMO_MODE:-0}" = "1" ]; then
+    echo "  ⚡ DEMO MODE: Fast-forwarding to Tier 3"
+    echo "  (For true progressive boot, unset PAC_DEMO_MODE)"
+    TARGET_TIER=3
+    echo ""
+    echo "DECISION: Boot to Tier $TARGET_TIER (DEMO MODE)"
+    echo ""
+else
+if [ "$CURRENT_TIER" -eq 1 ]; then
+    if [ -f "$HEALTH_LOG" ]; then
+        HEALTH_SCORE=$(grep -o '"overall_score":[0-9]*' "$HEALTH_LOG" 2>/dev/null | cut -d':' -f2)
+        HEALTH_SCORE=${HEALTH_SCORE:-0}
+        
+        if [ "$HEALTH_SCORE" -ge 3 ]; then
+            TARGET_TIER=2
+            echo "  + Health score: $HEALTH_SCORE (threshold: 3)"
+            echo "  + Promotion allowed: Tier 1 -> Tier 2"
+        else
+            TARGET_TIER=1
+            echo "  x Health score too low: $HEALTH_SCORE"
+            echo "  -> Staying in Tier 1 (safe mode)"
+        fi
+    else
+        TARGET_TIER=1
+        echo "  - Health data unavailable"
+        echo "  -> Staying in Tier 1 (safe mode)"
+    fi
+elif [ "$CURRENT_TIER" -eq 2 ]; then
+    if [ -f "$HEALTH_LOG" ]; then
+        HEALTH_SCORE=$(grep -o '"overall_score":[0-9]*' "$HEALTH_LOG" 2>/dev/null | cut -d':' -f2)
+        HEALTH_SCORE=${HEALTH_SCORE:-0}
+        
+        if [ "$HEALTH_SCORE" -ge 6 ]; then
+            TARGET_TIER=3
+            echo "  + Health score: $HEALTH_SCORE (threshold: 6)"
+            echo "  + Promotion allowed: Tier 2 -> Tier 3"
+        else
+            TARGET_TIER=2
+            echo "  -> Health score: $HEALTH_SCORE"
+            echo "  -> Staying in Tier 2 (restricted features)"
+        fi
+    else
+        TARGET_TIER=2
+        echo "  -> Staying in Tier 2 (restricted features)"
+    fi
+else
+    TARGET_TIER=$CURRENT_TIER
+    echo "  -> Current tier: $TARGET_TIER"
+fi
+
+    echo ""
+    echo "DECISION: Boot to Tier $TARGET_TIER"
+    echo ""
+fi
+
+if [ "$TARGET_TIER" -ge 2 ]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "NETWORK SETUP"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    if [ -f "$NETWORK_SCRIPT" ]; then
+        sh "$NETWORK_SCRIPT" 2>/dev/null || echo "  - Network setup failed"
+    else
+        echo "  Manually configuring network..."
+        ip link set lo up 2>/dev/null || true
+        for iface in eth0 enp0s3 enp0s4; do
+            if ip link show "$iface" >/dev/null 2>&1; then
+                echo "  -> Found interface: $iface"
+                ip link set "$iface" up
+                ip addr add 10.0.2.15/24 dev "$iface" 2>/dev/null || true
+                ip route add default via 10.0.2.2 2>/dev/null || true
+                echo "  + Network configured: $iface (10.0.2.15)"
+                break
+            fi
+        done
+    fi
+    
+    if ping -c 1 -W 2 10.0.2.2 >/dev/null 2>&1; then
+        echo "  + Network connectivity OK"
+    else
+        echo "  - No network connectivity"
+    fi
+    echo ""
+fi
+
+if [ "$TARGET_TIER" -eq 3 ]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "ATTESTATION - TPM + REMOTE VERIFICATION"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    if [ -f "$ATTEST_SCRIPT" ]; then
+        echo "-> Running attestation agent..."
+        VERBOSE=1 sh "$ATTEST_SCRIPT"
+        if [ $? -eq 0 ]; then
+            echo "  + Attestation completed successfully"
+        else
+            echo "  - Attestation completed with warnings (exit code: $?)"
+        fi
+    else
+        echo "  - Attestation script not found"
+    fi
+    echo ""
+fi
+
+if [ "$TARGET_TIER" -gt "$CURRENT_TIER" ]; then
+    echo "-> Committing tier promotion to journal..."
+    if /bin/journal_tool set-tier "$TARGET_TIER" "$JOURNAL" 2>/dev/null; then
+        echo "  + Journal updated: Tier $TARGET_TIER saved"
+        echo "  -> Next boot will attempt promotion from Tier $TARGET_TIER"
+    else
+        echo "  - Failed to update journal (tier promotion not persisted)"
+    fi
+    echo ""
+fi
+
+# Boot summary
+echo "═══════════════════════════════════════════════════════════════════"
+echo "PAC BOOT COMPLETE - Tier $TARGET_TIER Active"
+echo "═══════════════════════════════════════════════════════════════════"
+echo ""
+echo "System Information:"
+echo "  Hostname:    pac-system"
+echo "  Kernel:      $(uname -r)"
+echo "  Architecture: $(uname -m)"
+echo "  Boot Tier:   $TARGET_TIER"
+echo "  Previous:    Tier $CURRENT_TIER"
+if [ "$TARGET_TIER" -gt "$CURRENT_TIER" ]; then
+    echo "  Progression: + Promoted from Tier $CURRENT_TIER to Tier $TARGET_TIER"
+else
+    echo "  Progression: -> Maintained Tier $TARGET_TIER"
+fi
+echo ""
+echo "Progressive Boot Path:"
+if [ "$TARGET_TIER" -eq 1 ]; then
+    echo "  Tier 1 (Minimal) ◄── YOU ARE HERE"
+    echo "  Tier 2 (Network)"
+    echo "  Tier 3 (Full+Attestation)"
+elif [ "$TARGET_TIER" -eq 2 ]; then
+    echo "  Tier 1 (Minimal) +"
+    echo "  Tier 2 (Network) ◄── YOU ARE HERE"
+    echo "  Tier 3 (Full+Attestation)"
+else
+    echo "  Tier 1 (Minimal) +"
+    echo "  Tier 2 (Network) +"
+    echo "  Tier 3 (Full+Attestation) ◄── YOU ARE HERE"
+fi
+echo ""
+echo "Available Commands:"
+echo "  /bin/journal_tool read /var/pac/journal.dat  - View journal"
+echo "  sh $HEALTH_SCRIPT                            - Run health check"
+echo "  sh $ATTEST_SCRIPT                            - Run attestation"
+echo "  ip addr                                       - Check network"
+echo "  ping 10.0.2.2                                - Test connectivity"
+echo ""
+echo "═══════════════════════════════════════════════════════════════════"
+echo ""
+echo "Dropping to shell..."
+echo ""
+
+exec /bin/sh
