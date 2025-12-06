@@ -168,3 +168,67 @@ Experimental results depend on consistent timing and fault injection precision. 
 Fault injection timing matters for boot-time faults. Journal corruption must occur before the init process reads the journal file. Power cuts need precise timing to catch the system during writes. Runtime faults require the system to reach stable state before injection begins. Review `pac_fault_injector.py` for specific timing parameters used in published experiments.
 
 The policy monitor's 30-second polling interval affects recovery measurements. Faster polling detects failures sooner but increases overhead. The current setting balances detection latency with system load. Modify `policy_monitor.sh` if different trade-offs suit your evaluation.
+
+## Internal Architecture
+
+### Boot Journal
+
+The boot journal persists at `/var/pac/journal.dat` and maintains critical boot state across power cycles. The structure consists of two pages (A and B) with atomic alternating writes. Each page contains tier state, retry counters for Tier 2 and Tier 3 promotion attempts, rollback index, status flags, boot count, timestamp, and CRC32 checksum.
+
+The journal tool (`/bin/journal_tool`) provides operations to read current state, set tier levels, decrement retry counters, manage status flags, and initialize new journals. On boot, the init script recovers from the most recent valid page based on CRC verification and boot count comparison.
+
+Status flags include emergency mode, quarantine state, brownout detection, dirty shutdown marker, and network gating. These flags influence policy decisions during tier promotion attempts.
+
+### Health Check System
+
+Health assessment runs at `/usr/lib/pac/health_check.sh` and produces JSON output at `/tmp/health.json`. The system evaluates:
+
+- Memory availability (free RAM thresholds)
+- Storage accessibility and write capability
+- Essential utility presence (busybox, shell, coreutils)
+- Kernel operational status
+- Watchdog functionality (simulated in QEMU)
+- ECC error counts with configurable thresholds
+- Temperature readings (simulated in QEMU)
+
+Scores range from 0-10 where scores above 3 permit Tier 2 promotion and scores above 6 enable Tier 3 attempts. The health check outputs both numeric scores and detailed component status for debugging.
+
+### Policy Engine
+
+The policy engine at `/usr/lib/pac/policy_engine.sh` implements the tier transition logic. It consumes health check results, journal state, and attestation outcomes to decide promotion or degradation actions.
+
+Tier promotion requires health score thresholds, available retry attempts in the journal, and absence of blocking flags. Tier 2 demands network connectivity verified through interface configuration and gateway reachability. Tier 3 requires successful remote attestation with cryptographic token verification.
+
+Degradation triggers include health score drops, network loss, verifier unavailability, attestation failures, or fault detection. The engine updates the journal atomically after each decision to ensure state consistency across reboots.
+
+### Attestation System
+
+Attestation components reside in `/usr/lib/pac/` with multiple implementations. The dispatcher (`attest_agent.sh`) selects between cryptographic and mock attestation based on OpenSSL availability.
+
+Cryptographic attestation (`attest_agent_crypto.sh`) generates RSA-2048 key pairs at boot, collects platform measurements including journal state and TPM PCR values, constructs Entity Attestation Tokens (EAT) using CBOR encoding, signs tokens with the generated private key, and submits to the verifier at 10.0.2.2:8080 for validation.
+
+Token contents include nonce from verifier, hardware identifiers, boot tier and count, timestamp, and platform measurements. The verifier responds with allow/deny decisions based on signature verification and policy evaluation.
+
+Mock attestation (`attest_agent_mock.sh`) provides a fallback path when OpenSSL fails or for testing without cryptographic overhead. It generates synthetic tokens with predictable formats for development scenarios.
+
+### Policy Monitor Daemon
+
+The policy monitor (`/usr/lib/pac/policy_monitor.sh`) runs as a background process after achieving Tier 2 or higher. It polls every 30 seconds to assess system state and trigger tier changes dynamically.
+
+Monitoring checks include verifier reachability through HTTP requests, health score trends with degradation detection, journal state validation, and network connectivity status. The daemon logs decisions to console output and updates the journal when tier changes occur.
+
+Runtime promotion happens when a degraded system recovers. For example, if the verifier becomes available after previous unavailability, the monitor initiates Tier 3 promotion automatically. Similarly, health improvements can restore higher tiers without reboot.
+
+### Log and Output Paths
+
+System logs and runtime data accumulate in predictable locations:
+
+- Boot journal: `/var/pac/journal.dat`
+- Health assessment: `/tmp/health.json`
+- Attestation working directory: `/tmp/pac_attestation/`
+- Attestation keys: `/tmp/pac_attestation/aik_priv.pem` and `/tmp/pac_attestation/aik_pub.pem`
+- Attestation token: `/tmp/pac_attestation/eat_token.cbor`
+- Network configuration: `/etc/network/interfaces` (Tier 2+)
+- Console output: All tier transitions and policy decisions appear on the serial console
+
+Fault injection results write to `faultlab/results/` as JSON files named by fault type and timestamp. Each result file contains trial metadata, achieved tier, timing measurements, and recovery metrics.
