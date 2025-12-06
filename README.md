@@ -1,5 +1,7 @@
 # Progressive Attestation Chain (PAC) Boot System
 
+[![Build](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg)](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml)
+
 This repository contains the implementation and experimental framework for a fault-tolerant secure boot system that uses progressive attestation to achieve resilience under adverse conditions.
 
 ## System Overview

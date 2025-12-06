@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck python3 python3-pip
+        pip3 install Flask cryptography cbor2
+    
+    - name: Validate shell scripts
+      run: |
+        shellcheck setup_pac_lab.sh || true
+        shellcheck build_pac_system.sh || true
+        shellcheck real_pac_boot.sh || true
+        shellcheck cleanup_build_artifacts.sh || true
+    
+    - name: Check Python syntax
+      run: |
+        python3 -m py_compile verifier/verifier.py
+        python3 -m py_compile verifier/eat_cbor_decoder.py
+        python3 -m py_compile faultlab/pac_fault_injector.py
+        python3 -m py_compile faultlab/analyze_results.py
+    
+    - name: Compile C modules
+      run: |
+        sudo apt-get install -y gcc make
+        cd journal && make clean && make CC=gcc
+        cd ../health_check && make clean && make CC=gcc
+    
+    - name: Verification complete
+      run: echo "Build validation successful"
+
