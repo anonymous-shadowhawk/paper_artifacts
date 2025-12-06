@@ -1,10 +1,29 @@
+<div align="center">
+
 # Progressive Attestation Chain (PAC) Boot System
 
-[![Build](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg)](https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml)
-[![Platform](https://img.shields.io/badge/platform-ARM64%20%7C%20QEMU-blue.svg)](https://www.qemu.org/)
-[![Language](https://img.shields.io/badge/language-C%20%7C%20Python%20%7C%20Shell-green.svg)](https://github.com/anonymous-shadowhawk/paper_artifacts)
-[![Ubuntu](https://img.shields.io/badge/ubuntu-22.04%20LTS-orange.svg)](https://ubuntu.com/)
-[![TPM](https://img.shields.io/badge/TPM-2.0-red.svg)](https://trustedcomputinggroup.org/)
+<p>
+  <a href="https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml">
+    <img src="https://github.com/anonymous-shadowhawk/paper_artifacts/actions/workflows/build.yml/badge.svg" alt="Build Status" height="28"/>
+  </a>
+  <a href="https://www.qemu.org/">
+    <img src="https://img.shields.io/badge/platform-ARM64%20%7C%20QEMU-blue.svg?style=for-the-badge" alt="Platform" height="28"/>
+  </a>
+  <a href="https://trustedcomputinggroup.org/">
+    <img src="https://img.shields.io/badge/TPM-2.0-red.svg?style=for-the-badge" alt="TPM" height="28"/>
+  </a>
+</p>
+
+<p>
+  <a href="https://github.com/anonymous-shadowhawk/paper_artifacts">
+    <img src="https://img.shields.io/badge/language-C%20%7C%20Python%20%7C%20Shell-green.svg?style=for-the-badge" alt="Languages" height="28"/>
+  </a>
+  <a href="https://ubuntu.com/">
+    <img src="https://img.shields.io/badge/ubuntu-22.04%20LTS-orange.svg?style=for-the-badge" alt="Ubuntu" height="28"/>
+  </a>
+</p>
+
+</div>
 
 ---
 
