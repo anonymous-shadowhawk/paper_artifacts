@@ -48,9 +48,6 @@ rm -rf tier2/rootfs/bin tier2/rootfs/sbin tier2/rootfs/usr/bin tier2/rootfs/lib 
 echo "  Removing binaries from tier3/rootfs (will be rebuilt)..."
 rm -rf tier3/rootfs/bin tier3/rootfs/sbin tier3/rootfs/usr/bin tier3/rootfs/lib tier3/rootfs/lib64 2>/dev/null || true
 
-echo "  Removing .git from external repos..."
-rm -rf boot/u-boot/.git tier1_initramfs/.git 2>/dev/null || true
-
 echo "  Removing runtime state..."
 rm -rf var/* tpmstate/* 2>/dev/null || true
 
