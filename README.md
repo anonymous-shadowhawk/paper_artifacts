@@ -71,7 +71,8 @@ Clone the repository and initialize the environment:
 
 ```bash
 git clone https://github.com/anonymous-shadowhawk/paper_artifacts.git
-cd paper_artifacts
+mv paper_artifacts ft-pac
+cd ft-pac
 ./setup_pac_lab.sh
 ```
 

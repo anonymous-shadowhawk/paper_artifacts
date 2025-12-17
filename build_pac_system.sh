@@ -43,8 +43,10 @@ sudo apt-get install -y \
   flex bison libssl-dev libelf-dev libncurses5-dev \
   qemu-system qemu-system-arm qemu-system-misc qemu-utils \
   swtpm swtpm-tools tpm2-tools device-tree-compiler python3-venv \
-  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross \
+  python3-pip gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross \
   expect libgnutls28-dev cryptsetup-bin
+
+python3 -m pip install --user -r "${FT}/requirements.txt"
 
 log "Creating project tree at ${FT}"
 mkdir -p "${FT}"/{boot/{u-boot,keys,fit},kernel/{build,config},tier1_initramfs/{rootfs,img},tier2/{rootfs,img},tier3/{rootfs,img,keys},scripts,tpmstate}

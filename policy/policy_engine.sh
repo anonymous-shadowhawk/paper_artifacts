@@ -87,7 +87,7 @@ load_policy_config() {
 
 verify_tier2_signatures() {
     local tier2_root="${TIER2_ROOT:-/tier2-root}"
-    local verify_script="${FT_PAC:-/home/tester/ft-pac}/scripts/verify_tier_signature.sh"
+    local verify_script="${FT_PAC:-${HOME}/ft-pac}/scripts/verify_tier_signature.sh"
     
     if [ -x "$verify_script" ] && [ -f "$tier2_root/manifest.sig" ]; then
         log "Verifying Tier-2 RSA-2048 signature..."
@@ -120,7 +120,7 @@ verify_tier2_signatures() {
 
 verify_tier3_signatures() {
     local tier3_root="${TIER3_ROOT:-/tier3-root}"
-    local verify_script="${FT_PAC:-/home/tester/ft-pac}/scripts/verify_tier_signature.sh"
+    local verify_script="${FT_PAC:-${HOME}/ft-pac}/scripts/verify_tier_signature.sh"
     
     if [ -x "$verify_script" ] && [ -f "$tier3_root/manifest.sig" ]; then
         log "Verifying Tier-3 RSA-2048 signature..."

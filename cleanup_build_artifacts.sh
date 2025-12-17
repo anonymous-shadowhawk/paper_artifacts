@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-FT="/home/tester/ft-pac"
+FT="${HOME}/ft-pac"
 cd "$FT"
 
 echo "Cleaning ft-pac for GitHub..."

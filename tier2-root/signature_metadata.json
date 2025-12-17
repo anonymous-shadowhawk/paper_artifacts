@@ -3,5 +3,5 @@
   "signed_at": "2025-11-18T08:59:14Z",
   "manifest_hash": "a68ff8633fdae6e5ea4d87d9c93b0a9e912f49cd10b2af762b8324994bdc79c3",
   "signature_algorithm": "RSA-2048 + SHA-256",
-  "public_key": "/home/tester/ft-pac/keys/pac_public.pem"
+  "public_key": "${HOME}/ft-pac/keys/pac_public.pem"
 }

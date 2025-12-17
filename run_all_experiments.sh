@@ -20,7 +20,7 @@ echo "Results: /tmp/pac_complete_results_$(date +%Y%m%d_%H%M%S)"
 echo ""
 read -p "Press Enter to start (or Ctrl+C to cancel)..."
 
-cd /home/tester/ft-pac/faultlab
+cd "${HOME}/ft-pac/faultlab"
 RESULTS_DIR="/tmp/pac_complete_results_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RESULTS_DIR"
 LOG_FILE="$RESULTS_DIR/master.log"

@@ -6,7 +6,7 @@ echo ""
 echo ""
 
 echo "[1/5] Starting verifier service..."
-cd /home/tester/ft-pac/verifier
+cd "${HOME}/ft-pac/verifier"
 python3 verifier.py > /tmp/verifier.log 2>&1 &
 VERIFIER_PID=$!
 echo "Verifier PID: $VERIFIER_PID"

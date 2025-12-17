@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOURNAL_PATH="/home/tester/ft-pac/tier1_initramfs/build/var/pac/journal.dat"
+JOURNAL_PATH="${HOME}/ft-pac/tier1_initramfs/build/var/pac/journal.dat"
 
 echo ""
 echo "              Reset PAC Boot Journal to Tier 1                   "
@@ -11,7 +11,7 @@ if [ -f "$JOURNAL_PATH" ]; then
     echo "Found journal: $JOURNAL_PATH"
     echo ""
     echo "Current state:"
-    /home/tester/ft-pac/tier1_initramfs/build/bin/journal_tool read "$JOURNAL_PATH" 2>/dev/null | grep -E "Tier:|Boot Count:" || echo "  (unable to read)"
+    "${HOME}/ft-pac/tier1_initramfs/build/bin/journal_tool" read "$JOURNAL_PATH" 2>/dev/null | grep -E "Tier:|Boot Count:" || echo "  (unable to read)"
     echo ""
     
     read -p "Reset journal to Tier 1? (y/N): " -n 1 -r
