@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 TPMSOCK="/tmp/swtpm.sock"
-KIMG="${HOME}/ft-pac/boot/fit/Image"
-INITRD="${HOME}/ft-pac/tier1_initramfs/img/initramfs.cpio.gz"
-DTB="${HOME}/ft-pac/boot/fit/virt.dtb"
-DISK="${HOME}/ft-pac/boot/fit/fake.img"
+KIMG="/home/tester/ft-pac/boot/fit/Image"
+INITRD="/home/tester/ft-pac/tier1_initramfs/img/initramfs.cpio.gz"
+DTB="/home/tester/ft-pac/boot/fit/virt.dtb"
+DISK="/home/tester/ft-pac/boot/fit/fake.img"
 
 exec qemu-system-aarch64 \
   -machine virt,gic-version=3 \

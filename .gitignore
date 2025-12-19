@@ -16,21 +16,7 @@ boot/u-boot/build/
 boot/fit/*.itb
 boot/fit/*.dtb
 
-kernel/src/
-kernel/build/
 
-openssl/src/
-openssl/install/
-
-tier1_initramfs/img/
-tier1_initramfs/src/
-tier1_initramfs/rootfs/host_tmp/
-
-tier2/img/
-tier2/rootfs/host_tmp/
-
-tier3/img/
-tier3/rootfs/host_tmp/
 
 iso/build/
 
@@ -45,11 +31,4 @@ var/pac/
 *~
 .DS_Store
 
-journal/journal_tool
-journal/demo_journal
-journal/test_journal
-
-health_check/health_check_tool
-
-tier1_initramfs/build/bin/journal_tool
 
