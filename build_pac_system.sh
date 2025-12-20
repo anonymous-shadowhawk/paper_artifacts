@@ -46,7 +46,7 @@ sudo apt-get install -y \
   python3-pip gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross \
   expect libgnutls28-dev cryptsetup-bin
 
-python3 -m pip install --user -r "${FT}/requirements.txt"
+python3 -m pip install --user -r "$(pwd)/requirements.txt"
 
 log "Creating project tree at ${FT}"
 mkdir -p "${FT}"/{boot/{u-boot,keys,fit},kernel/{build,config},tier1_initramfs/{rootfs,img},tier2/{rootfs,img},tier3/{rootfs,img,keys},scripts,tpmstate}
