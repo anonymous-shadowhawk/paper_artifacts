@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FT="${HOME}/ft-pac"
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FT="${SCRIPT_DIR}"
+
 UBOOT_GIT="https://source.denx.de/u-boot/u-boot.git"
 KERNEL_GIT="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
 BUSYBOX_GIT="https://github.com/mirror/busybox.git"
@@ -46,7 +49,7 @@ sudo apt-get install -y \
   python3-pip gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross \
   expect libgnutls28-dev cryptsetup-bin
 
-python3 -m pip install --user -r "$(pwd)/requirements.txt"
+python3 -m pip install --user -r "${SCRIPT_DIR}/requirements.txt"
 
 log "Creating project tree at ${FT}"
 mkdir -p "${FT}"/{boot/{u-boot,keys,fit},kernel/{build,config},tier1_initramfs/{rootfs,img},tier2/{rootfs,img},tier3/{rootfs,img,keys},scripts,tpmstate}
@@ -1162,7 +1165,7 @@ log "Writing TPM restart helper..."
 cat > "${FT}/scripts/tpm-restart.sh" <<'SH'
 #!/usr/bin/env bash
 set -euo pipefail
-STATE="${HOME}/ft-pac/tpmstate"
+STATE="${FT}/tpmstate"
 mkdir -p "${STATE}"
 pkill -f "swtpm socket --tpm2" >/dev/null 2>&1 || true
 swtpm socket --tpm2 \
@@ -1211,7 +1214,6 @@ log "Writing qemu-uboot-fit.sh (U-Boot + FIT boot via 9p share)..."
 cat > "${FT}/scripts/qemu-uboot-fit.sh" << 'SH'
 #!/usr/bin/env bash
 set -euo pipefail
-FT="${HOME}/ft-pac"
 TPMSOCK="/tmp/swtpm.sock"
 UBOOT="${FT}/boot/u-boot/src/u-boot.elf"
 FIT="${FT}/boot/fit/fit.itb"

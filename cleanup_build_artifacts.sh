@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-#FT="/home/tester/ft-pac"
-FT="$(pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FT="${SCRIPT_DIR}"
 cd "$FT"
 
 echo "Cleaning ft-pac for GitHub..."
