@@ -2,6 +2,20 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FAULTLAB_DIR="${SCRIPT_DIR}/faultlab"
+
+check_sudo() {
+    if [ "$EUID" -ne 0 ]; then 
+        echo "This script needs elevated privileges to run QEMU and manage TPM"
+        echo "Requesting sudo access..."
+        exec sudo "$0" "$@"
+        exit 1
+    fi
+}
+
+check_sudo "$@"
+
 echo "COMPLETE PAC EXPERIMENTAL EVALUATION"
 echo ""
 echo "PHASE 1: BOOT-TIME FAULTS (5 types x 100 trials = 500)"
@@ -20,7 +34,7 @@ echo "Results: /tmp/pac_complete_results_$(date +%Y%m%d_%H%M%S)"
 echo ""
 read -p "Press Enter to start (or Ctrl+C to cancel)..."
 
-cd "${HOME}/ft-pac/faultlab"
+cd "${FAULTLAB_DIR}"
 RESULTS_DIR="/tmp/pac_complete_results_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RESULTS_DIR"
 LOG_FILE="$RESULTS_DIR/master.log"

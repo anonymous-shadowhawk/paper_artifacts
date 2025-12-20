@@ -2,7 +2,13 @@
 
 set -e
 
-FT=~/ft-pac
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ "$(basename "$(dirname "$SCRIPT_DIR")")" == "ft-pac" ]]; then
+    FT="$(dirname "$SCRIPT_DIR")"
+else
+    FT="$SCRIPT_DIR"
+fi
 
 TPMSOCK="/tmp/swtpm_fault_${RANDOM}.sock"
 TPMSTATE="/tmp/tpm-state-${RANDOM}"
@@ -44,4 +50,3 @@ exec qemu-system-aarch64 \
   -device virtio-net-pci,netdev=net0 \
   -virtfs local,path=/tmp,mount_tag=host_tmp,security_model=none,id=host_tmp \
   $TPM_OPTS
-

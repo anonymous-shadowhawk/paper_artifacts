@@ -15,12 +15,14 @@ import queue
 from datetime import datetime
 from pathlib import Path
 
-FT = os.path.expanduser("~/ft-pac")
-FAULTLAB_DIR = f"{FT}/faultlab"
-BOOT_SCRIPT = f"{FAULTLAB_DIR}/qemu_boot_noninteractive.sh"
-RESULTS_DIR = f"{FAULTLAB_DIR}/results"
-BACKUP_DIR = f"{FAULTLAB_DIR}/backups"
-JOURNAL_TOOL = f"{FT}/journal/journal_tool"  
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+FT = os.path.dirname(SCRIPT_DIR)
+FAULTLAB_DIR = SCRIPT_DIR
+BOOT_SCRIPT = os.path.join(FAULTLAB_DIR, "qemu_boot_noninteractive.sh")
+RESULTS_DIR = os.path.join(FAULTLAB_DIR, "results")
+BACKUP_DIR = os.path.join(FAULTLAB_DIR, "backups")
+JOURNAL_TOOL = os.path.join(FT, "journal", "journal_tool") 
 
 BOOT_TIME_FAULTS = ['bit_flip', 'torn_write', 'signature', 'brownout', 'power_cut']
 RUNTIME_FAULTS = ['verifier_kill', 'ecc', 'watchdog', 'temperature', 'storage']
